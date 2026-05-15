@@ -1,0 +1,35 @@
+.share {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background: var(--share-bg);
+  border: 1px solid var(--share-border);
+  padding: var(--share-padding);
+  border-radius: var(--share-radius);
+  min-height: var(--share-min-height);
+  cursor: pointer;
+  color: var(--text-default);
+  font-family: inherit;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .share:hover { background: var(--share-bg-hover); }
+}
+
+.share:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.share__label {
+  font-size: var(--share-label-size);
+  color: var(--text-secondary);
+}
+
+.share__spin {
+  animation: share-spin 1s linear infinite;
+}
+
+@keyframes share-spin {
+  to { transform: rotate(360deg); }
+}

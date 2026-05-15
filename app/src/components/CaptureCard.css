@@ -1,0 +1,97 @@
+.capture {
+  position: relative;
+  background: var(--bg-capture, var(--gray-100));
+  color: var(--text-default);
+  padding: var(--capture-padding);
+  border-radius: var(--capture-radius);
+  box-shadow: var(--capture-shadow);
+  margin-top: var(--space-4);
+}
+
+.capture__name {
+  margin: var(--space-6) 0 var(--space-4);
+  font-size: var(--capture-name-size);
+  font-weight: var(--capture-name-weight);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text-default);
+}
+
+.capture__divider {
+  border: none;
+  border-top: 1px solid var(--gray-900);
+  opacity: 0.25;
+  margin: var(--space-5) 0;
+}
+
+.capture__tagline {
+  font-size: var(--capture-tagline-size);
+  font-style: italic;
+  line-height: 1.6;
+  margin: 0 0 var(--space-5);
+  color: var(--text-default);
+}
+
+.capture__traits {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.capture__traits li {
+  font-size: var(--capture-description-size);
+  line-height: 1.6;
+  color: var(--text-default);
+}
+
+.capture__traits li::before {
+  content: '· ';
+  font-weight: bold;
+  margin-right: var(--space-1);
+}
+
+.capture__watermark {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-3);
+  font-size: var(--capture-watermark-size);
+  color: var(--text-default);
+  opacity: 0.55;
+}
+
+/* ----- 셀럽레이션 (첫 진입 시만) ----- */
+.capture--celebrate {
+  opacity: 0;
+  transform: scale(0.96);
+  animation: capture-enter var(--duration-slow) var(--ease-out-back) forwards;
+}
+
+.capture--celebrate .capture__name {
+  opacity: 0; transform: translateY(12px);
+  animation: text-rise var(--duration-base) var(--ease-out) 200ms forwards;
+}
+.capture--celebrate .capture__tagline {
+  opacity: 0;
+  animation: fade-in var(--duration-base) var(--ease-out) 400ms forwards;
+}
+.capture--celebrate .capture__traits li {
+  opacity: 0; transform: translateY(8px);
+  animation: text-rise var(--duration-base) var(--ease-out) forwards;
+}
+.capture--celebrate .capture__traits li:nth-child(1) { animation-delay: 600ms; }
+.capture--celebrate .capture__traits li:nth-child(2) { animation-delay: 680ms; }
+.capture--celebrate .capture__traits li:nth-child(3) { animation-delay: 760ms; }
+.capture--celebrate .capture__traits li:nth-child(4) { animation-delay: 840ms; }
+
+@keyframes capture-enter {
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes text-rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  to { opacity: 1; }
+}
