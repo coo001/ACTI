@@ -5,8 +5,8 @@
  * 사이트 URL은 서버 환경변수에서 읽어 인자로 전달한다.
  */
 
-import type { TypeContent } from '../content/schema';
-import { getTypeDetails } from '../content/typeDetails';
+import type { EmailType } from './types';
+import { getTypeDetails } from './typeDetails';
 
 export type RenderedEmail = {
   subject: string;
@@ -26,7 +26,7 @@ const escapeHtml = (s: string): string =>
     }
   });
 
-export function renderResultEmail(type: TypeContent, siteUrl: string): RenderedEmail {
+export function renderResultEmail(type: EmailType, siteUrl: string): RenderedEmail {
   const details = getTypeDetails(type.code);
   const resultUrl = `${siteUrl.replace(/\/$/, '')}/result/${type.code}`;
   const subject = `[ACTI] ${type.code} ${type.name} — 상세 결과 리포트`;

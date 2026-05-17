@@ -18,9 +18,8 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { Resend } from 'resend';
 import { z } from 'zod';
 
-import { TYPE_CODES } from '../src/content/schema';
-import { getType } from '../src/content/types';
-import { renderResultEmail } from '../src/lib/emailTemplate';
+import { TYPE_CODES, getType } from './_lib/types';
+import { renderResultEmail } from './_lib/emailTemplate';
 
 /** Vercel Node runtime이 주입하는 최소 req/res 확장 (외부 타입 의존 제거). */
 type VercelRequest = IncomingMessage & { body?: unknown };
