@@ -6,9 +6,10 @@
  *  - consent 는 개인정보 수집 동의 (true 필수)
  *
  * 환경변수:
- *  - RESEND_API_KEY   (필수)
- *  - RESEND_FROM      (선택, 기본: ACTI <onboarding@resend.dev>)
- *  - SITE_URL         (선택, 메일 본문 링크용)
+ *  - RESEND_API_KEY        (필수)
+ *  - RESEND_FROM           (선택, 기본: ACTI <onboarding@resend.dev>)
+ *  - SITE_URL              (선택, 메일 본문 링크용)
+ *  - SHEETS_WEBHOOK_URL    (선택, 신청 이메일을 Google Sheet에 기록)
  *
  * 주의: 마케팅 audience 자동 등록은 PIPA 동의 범위 초과 위험이 있어
  * 의도적으로 빼두었음. 별도 마케팅 동의 체크박스를 도입한 후 다시 붙일 것.
@@ -72,6 +73,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (sendError) {
       console.error('Resend send error', sendError);
       return res.status(502).json({ error: '메일 발송에 실패했어요' });
+    }
+
+    // Google Sheet 로깅 — 실패해도 사용자 응답엔 영향 없음
+    const sheetsUrl = process.env.SHEETS_WEBHOOK_URL;
+    if (sheetsUrl) {
+      try {
+        await fetch(sheetsUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, code, consent: true }),
+        });
+      } catch (sheetErr) {
+        console.warn('Sheets log failed', sheetErr);
+      }
     }
 
     return res.status(200).json({ ok: true });
