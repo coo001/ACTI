@@ -122,31 +122,7 @@ export default function ResultPage() {
           celebrate={isCelebrate}
         />
 
-        {!isRecipient && (
-          <section className="page-result__share">
-            <h3 className="page-result__share-title">친구한테 자랑하기</h3>
-            <div className="share-group">
-              <ShareActionButton
-                type="instagram"
-                icon={Camera}
-                label="스토리"
-                onAction={handleInstagramShare}
-              />
-              <ShareActionButton
-                type="kakao"
-                icon={MessageCircle}
-                label="카카오톡"
-                onAction={handleKakaoShare}
-              />
-              <ShareActionButton
-                type="link"
-                icon={LinkIcon}
-                label="링크복사"
-                onAction={handleCopyLink}
-              />
-            </div>
-          </section>
-        )}
+        {!isRecipient && <ResultEmailForm code={type.code} />}
 
         <AxisBreakdown code={type.code} />
 
@@ -181,7 +157,31 @@ export default function ResultPage() {
           </div>
         </section>
 
-        {!isRecipient && <ResultEmailForm code={type.code} />}
+        {!isRecipient && (
+          <section className="page-result__share">
+            <h3 className="page-result__share-title">친구한테 자랑하기</h3>
+            <div className="share-group">
+              <ShareActionButton
+                type="instagram"
+                icon={Camera}
+                label="스토리"
+                onAction={handleInstagramShare}
+              />
+              <ShareActionButton
+                type="kakao"
+                icon={MessageCircle}
+                label="카카오톡"
+                onAction={handleKakaoShare}
+              />
+              <ShareActionButton
+                type="link"
+                icon={LinkIcon}
+                label="링크복사"
+                onAction={handleCopyLink}
+              />
+            </div>
+          </section>
+        )}
 
         <SecondaryButton size="lg" fullWidth onClick={handleRetry}>
           <RotateCcw size={18} aria-hidden="true" /> 다시 풀어보기
