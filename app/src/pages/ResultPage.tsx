@@ -22,6 +22,7 @@ import { getType } from '../content/types';
 import { getMyTypeCode, clearMyTypeCode } from '../lib/storage';
 import { getSiteUrl, shareCaptureToInstagram, copyResultUrl } from '../lib/share';
 import { ensureKakaoReady, shareToKakao } from '../lib/kakao';
+import { trackResultAction } from '../lib/analytics';
 
 import NotFoundPage from './NotFoundPage';
 import './ResultPage.css';
@@ -29,13 +30,15 @@ import './ResultPage.css';
 export default function ResultPage() {
   const { code: rawCode } = useParams<{ code: string }>();
   const navigate = useNavigate();
+  const myCode = useMemo(() => getMyTypeCode(), []);
+  const captureRef = useRef<HTMLElement>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
   if (!rawCode || !isTypeCode(rawCode)) {
     return <NotFoundPage />;
   }
   const code = rawCode;
 
-  const myCode = useMemo(() => getMyTypeCode(), []);
   const isRecipient = !myCode || myCode !== code;
   const isCelebrate = !isRecipient && myCode === code;
 
@@ -43,9 +46,6 @@ export default function ResultPage() {
   const rival = getType(type.rival);
   const bff = getType(type.bff);
   const siteUrl = getSiteUrl();
-
-  const captureRef = useRef<HTMLElement>(null);
-  const [toast, setToast] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -63,8 +63,10 @@ export default function ResultPage() {
     const shareText = `${type.code} ${type.name} — ${siteUrl}/result/${type.code}`;
     const result = await shareCaptureToInstagram(captureRef.current, filename, shareText);
     if (result === 'downloaded') {
+      trackResultAction('instagram_story', type.code);
       showToast('이미지 저장됨! 인스타 스토리에 올려주세요');
     } else if (result === 'shared') {
+      trackResultAction('instagram_story', type.code);
       showToast('공유 완료!');
     }
   };
@@ -75,10 +77,12 @@ export default function ResultPage() {
       throw new Error('Kakao not ready');
     }
     shareToKakao(type, siteUrl);
+    trackResultAction('kakao_share', type.code);
   };
 
   const handleCopyLink = async () => {
     await copyResultUrl(type.code);
+    trackResultAction('copy_link', type.code);
     showToast('링크가 복사됐어요');
   };
 
@@ -122,7 +126,12 @@ export default function ResultPage() {
           celebrate={isCelebrate}
         />
 
-        {!isRecipient && <ResultEmailForm code={type.code} />}
+        {!isRecipient && (
+          <ResultEmailForm
+            code={type.code}
+            onDelivered={() => trackResultAction('email_report', type.code)}
+          />
+        )}
 
         <AxisBreakdown code={type.code} />
 
