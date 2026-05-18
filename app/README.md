@@ -25,9 +25,11 @@ pnpm dev
 ```env
 VITE_KAKAO_APP_KEY=...   # https://developers.kakao.com 에서 발급
 VITE_SITE_URL=https://acti.example.com
+VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX  # 배포 담당자가 GA4 Measurement ID 입력
 ```
 
 키가 비어 있어도 앱은 동작합니다. 카톡 공유만 비활성됩니다.
+GA Measurement ID가 비어 있으면 Google Analytics 스크립트도 로드하지 않습니다.
 
 ## 빌드 & 배포
 

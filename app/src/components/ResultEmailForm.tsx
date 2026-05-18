@@ -13,13 +13,14 @@ import './ResultEmailForm.css';
 
 type Props = {
   code: TypeCode;
+  onDelivered?: () => void;
 };
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export default function ResultEmailForm({ code }: Props) {
+export default function ResultEmailForm({ code, onDelivered }: Props) {
   const emailId = useId();
   const consentId = useId();
 
@@ -39,6 +40,7 @@ export default function ResultEmailForm({ code }: Props) {
     setErrorMsg(null);
     try {
       await sendResultEmail({ email, code, consent: true });
+      onDelivered?.();
       setStatus('success');
     } catch (err) {
       setStatus('error');
